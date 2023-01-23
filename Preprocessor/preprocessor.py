@@ -92,7 +92,7 @@ class Preprocessor(object):
             img_id = data[:, 0]
             patient_id = data[:, 1]
         else:
-            data = df['image_id', 'patient_id'].values
+            data = df[['image_id', 'patient_id']].values
             img_id = data[:, 0]
             patient_id = data[:, 1]    
         file_names = []
