@@ -8,6 +8,8 @@ import pydicom
 import dicomsdl
 from pydicom.pixel_data_handlers import apply_windowing
 
+import torch
+
 from side import Side
 from bbox import BoundingBox
 
@@ -41,39 +43,45 @@ class Preprocessor(object):
         Returns:
             List: List of processed images.
         """
-        paths = self._get_file_paths(self.imgs_path, self.csv_path, n, shuffle = shuffle)
+        paths = self.get_file_paths(self.imgs_path, self.csv_path, n, shuffle = shuffle)
         retVal = []
-        
         for i, path in enumerate(paths):
-            img = self._get_pixels(path, windowing = windowing, to_dtype = to_dtype)
-            # determine side before cropping
-            img_side = self._determine_side(img)
-
-            bbox, _ = self._get_bbox(img, 5)
-            img = self._crop_image(img, bbox)
+            img = self.process_image(windowing = windowing, shuffle = shuffle, size = size, to_dtype = to_dtype, save = save,
+                                     save_dir = save_dir, convertToOneSide = convertToOneSide, side = side)
             
-            if convertToOneSide:
-                # if image is not on specified side
-                if img_side != side: 
-                    # Use Flip code 1 to flip horisontally
-                    img = cv2.flip(img, 1)
-                
-                
-            img = cv2.resize(img, size)
-            if save:
-                orig_img_name = path.split(sep = '/')[-1]
-                img_name = orig_img_name.split(sep = '.')[0] + '.png'
-                cv2.imwrite(os.path.join('/kaggle/working/' , img_name), img)
-                
             if returnProcessedImgs:
                 retVal.append(img)
-        
-        
+
         return retVal
         
         
+    def process_image(self, path, windowing = True, shuffle = False, size = (512, 512), to_dtype = 'uint8', save = False, 
+                      save_dir = '',  convertToOneSide = False, side = Side.LEFT):
+
+        img = self.get_pixels(path, windowing = windowing, to_dtype = to_dtype)
+        # determine side before cropping
+        img_side = self.determine_side(img)
+
+        bbox, _ = self.get_bbox(img, 5)
+        img = self.crop_image(img, bbox)
             
-    def _get_file_paths(self, imgs_path: str, csv_path: str, n: int, shuffle = False):
+        if convertToOneSide:
+            # if image is not on specified side
+            if img_side != side: 
+                # Use Flip code 1 to flip horisontally
+                img = cv2.flip(img, 1)
+                
+                
+        img = cv2.resize(img, size)
+        if save:
+            orig_img_name = path.split(sep = '/')[-1]
+            img_name = orig_img_name.split(sep = '.')[0] + '.png'
+            cv2.imwrite(os.path.join(save_dir , img_name), img)
+
+        
+        return torch.Tensor(img)
+            
+    def get_file_paths(self, imgs_path: str, csv_path: str, n: int, shuffle = False):
         """_summary_
 
         Args:
