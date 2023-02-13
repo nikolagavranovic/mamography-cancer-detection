@@ -1,3 +1,5 @@
 # Install required libraries
 !pip install -qU python-gdcm pydicom pylibjpeg
 !pip install -qU dicomsdl
+
+!pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/nightly --upgrade nvidia-dali-nightly-cuda110
