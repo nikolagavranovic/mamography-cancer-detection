@@ -39,10 +39,10 @@ For functionality demonstration, check the notebook 'image-preprocessing-demo.ip
 ## 4.    Training
 
 The dataset imbalance is great, with less than 2% of data belonging to the positive class. That makes it very tough for training any neural net. To tackle this issue, two methods are combined:
-* 1. Weighted loss function * – custom binary cross entropy class weighted function is used for loss function: $ L=  {1\over N} \sum_{i=1}^N((w_{positive} y_{true}  log⁡(y_{pred} )-(1- y_{true}) w_{negative}  log⁡(1- y_{pred}))$.
+*1. Weighted loss function* – custom binary cross entropy class weighted function is used for loss function: $ L=  {1\over N} \sum_{i=1}^N((w_{positive} y_{true}  log⁡(y_{pred} )-(1- y_{true}) w_{negative}  log⁡(1- y_{pred}))$.
 Positive weight is 3 – 20, depending on weather upsampling is used or not.
 
-* 2. Upsampling * – technique that samples more frequently images of minority class.
+*2. Upsampling* – technique that samples more frequently images of minority class.
  <br>
 
 For imbalanced binary classification problems, metric choice is very significant. Accuracy is irrelevant (if all samples are classified as negative, that would be >98% accuracy), so the F metric is chosen, with it’s general form: <br>
