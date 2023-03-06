@@ -38,11 +38,8 @@ For functionality demonstration, check the notebook 'image-preprocessing-demo.ip
 <!-- End list -->
 ## 4.    Training
 
-
-The dataset imbalance is great, with less than 2% of data belonging to the positive class. That makes it very tough for training any neural net. To tackle this issue, two methods are combined: <br>
-*1. Weighted loss function* – custom binary cross entropy class weighted function is used for loss function: <br> 
-$ L=  {1\over N} \sum_{i=1}^N(w_{positive} y_{true}  log⁡(y_{pred} )-(1- y_{true}) w_{negative}  log⁡(1- y_{pred})$.
-<br>
+The dataset imbalance is great, with less than 2% of data belonging to the positive class. That makes it very tough for training any neural net. To tackle this issue, two methods are combined:
+*1. Weighted loss function* – custom binary cross entropy class weighted function is used for loss function: $ L=  {1\over N} \sum_{i=1}^N((w_{positive} y_{true}  log⁡(y_{pred} )-(1- y_{true}) w_{negative}  log⁡(1- y_{pred}))$.
 Positive weight is 3 – 20, depending on weather upsampling is used or not.
 
 *2. Upsampling* – technique that samples more frequently images of minority class.
